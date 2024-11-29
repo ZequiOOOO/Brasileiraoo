@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela e Jogos do Brasileirão</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="d-flex">
+            <div class="cor-azul">globo.com</div>
+            <div class="cor-vermelho">g1</div>
+            <div class="cor-verde">ge</div>
+            <div class="cor-laranjao">gshow</div>
+            <div class="cor-vermelhoFra">globoplay</div>
+            <div class="cor-vermelhao">cartola</div>
+            <div class="color-pretinho">sportv</div>
+        </div>
+
+        <div class="d-flex">
+            <div class="color-pretinho">assine já</div>
+            <div class="color-pretinho">Conta Globo</div>
+        </div>
+    </div>
+    
+    <div class="menu"> 
+        <div class="d-flex">
+            <div>menu</div>
+            <div>ge</div>
+            <div> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield" viewBox="0 0 16 16">
+                <path d="M5.338 1.59a61 61 0 0 0-2.837.856.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025 1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56"/>
+              </svg></div>
+              
+    </div>  
+    <div class="brasi">      
+            <div>BRASILEIRÃO SÉRIE A</div>
+        </div>
+        <div>
+            <input type="text" placeholder="BUSCAR" style="padding: 5px; border-radius: 4px;">
+        </div>
+    </div>
+
+    <div class="classificacao">
+        <div>classificação</div>
+        <div>simulador</div>
+        <div>vídeo</div>
+        <div>seja pró</div>
+        <div>VAR</div> 
+    </div>
+    <div class="jogo">
+        <div class="Tabela">
+            <header class="TitTab">
+                <h2>tabela</h2>
+            </header>
+            <table id="idTabela">
+                <thead>
+                    <tr>
+                        <th>Classificação</th>
+                        <th>P</th>
+                        <th>J</th>
+                        <th>V</th>
+                        <th>E</th>
+                        <th>D</th>
+                        <th>GP</th>
+                        <th>GC</th>
+                        <th>SG</th>
+                        <th>&</th>
+                        <th>ÚLT. JOGOS</th>
+                    </tr>
+                </thead>
+                <tbody id="tBodyGame">
+               
+                </tbody>
+            </table>
+        </div>
+        <div class="jogos">
+            <div id="sectionGame">
+                <header class="TitJog">
+                    <h2>JOGOS</h2>
+                </header>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        window.onload = function() {
+            $.ajax({
+                url: "https://api.api-futebol.com.br/v1/campeonatos/14/tabela",
+                headers: { "Authorization": "Bearer test_0ec8b063033e8b32c35df9cec53777" },
+                type: "GET",
+                success: function(data) {
+                    var tBody = document.getElementById("tBodyGame");
+                    for (var i = 0; i < data.length; i++) {
+                        var team = data[i];
+                        var ultimosJogos = team.ultimos_jogos;
+                        var jogosSVG = '';
+                        for (var j = 0; j < ultimosJogos.length; j++) {
+                            let color;
+                            if (ultimosJogos[j] === 'v') {
+                                color = 'green';
+                            } else if (ultimosJogos[j] === 'e') {
+                                color = 'gray';
+                            } else if (ultimosJogos[j] === 'd') {
+                                color = 'red';
+                            }
+                            jogosSVG += `<svg class="jogo-svg" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 512 512" fill="${color}"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"/></svg>`;
+                        }
+                        var row = `<tr>
+                                    <td>
+                                        <div class="table-dados-time-td">
+                                            <div class="table-posicao-td">${team.posicao}</div>
+                                            <div class="table-nome-td">${team.time.nome_popular}</div>
+                                        </div>
+                                    </td>
+                                    <td style="font-weight: 700;">${team.pontos}</td>
+                                    <td>${team.jogos}</td>
+                                    <td>${team.vitorias}</td>
+                                    <td>${team.empates}</td>
+                                    <td>${team.derrotas}</td>
+                                    <td>${team.gols_pro}</td>
+                                    <td>${team.gols_contra}</td>
+                                    <td>${team.saldo_gols}</td>
+                                    <td>${team.aproveitamento}</td>
+                                    <td>${jogosSVG}</td>
+                                </tr>`;
+                        tBody.innerHTML += row;
+                    }
+                },
+                error: function(error) {
+                    alert("Deu erro na requisição: " + error.toString());
+                }
+            });
+
+            $.ajax({
+                url: "https://api.api-futebol.com.br/v1/campeonatos/14/rodadas/1",
+                headers: { "Authorization": "Bearer test_0ec8b063033e8b32c35df9cec53777" },
+                type: "GET",
+                success: function(data) {
+                    var round = data;
+                    var section = document.getElementById("sectionGame");
+
+                    for (var i = 0; i < round.partidas.length; i++) {
+                        var partida = round.partidas[i];
+
+                        function obterDiaSemana(dateISO) {
+                            var dataConvertida = new Date(dateISO);
+                            var diasDaSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+                            var Dia = diasDaSemana[dataConvertida.getDay()];
+                            return Dia;
+                        }
+
+                        var result = obterDiaSemana(partida.data_realizacao_iso);
+
+                        var row = `
+                            <div class="jogo-rodada-div">
+                            <span class="jogo-rodada"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                        </svg></span>
+                            <span class="jogo-rodada">${round.nome}</span>
+                            <span class="jogo-rodada"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                        </svg></span>
+                            </div>
+
+                            <div class="detalherodada">
+                                <span class="jogo-local">${partida.estadio.nome_popular}</span>
+                                <span class="jogo-datahora">${partida.data_realizacao}</span>
+                                <span class="jogo-datahora">${result}</span>
+                                <span class="jogo-datahora">${partida.hora_realizacao}</span>
+                            </div>
+                            <div class="confronto">
+                                <div class="time-data">
+                                    <span class="time-nome-left">${partida.time_mandante.nome_popular}</span>
+                                    <img src="${partida.time_mandante.escudo}" class="time-logo">
+                                </div>
+                                <div class="vs">
+                                    <span></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="scoreboard-vs-icon" width="10px" height="10px" style="margin: 10px;">
+                                        <line x1="-3" x2="100" y1="1" y2="100" stroke="#555" stroke-width="5"></line>
+                                        <line x1="-3" x2="100" y1="100" y2="1" stroke="#555" stroke-width="5"></line>
+                                    </svg>
+                                    <span></span>
+                                </div>
+                                <div class="time-data">
+                                    <img src="${partida.time_visitante.escudo}" class="time-logo">
+                                    <span class="time-nome-right">${partida.time_visitante.nome_popular}</span>
+                                </div>
+                            </div>`;
+
+                        section.innerHTML += row;
+                    }
+                },
+                error: function(error) {
+                    alert("Deu erro na requisição: " + error.toString());
+                }
+            });
+        };
+    </script>
+</body>
+</html>
+
